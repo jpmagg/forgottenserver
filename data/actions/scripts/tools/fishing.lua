@@ -15,7 +15,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 		local targetItem = Item(itemEx.uid)
 		local owner = targetItem:getAttribute(ITEM_ATTRIBUTE_CORPSEOWNER)
 		if owner ~= 0 and owner ~= cid then
-			Player(cid):sendTextMessage(MESSAGE_STATUS_SMALL, "You are not the owner.")
+			Player(cid):sendCancelMessage("You are not the owner.")
 			return true
 		end
 
@@ -42,41 +42,44 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	if targetId == 493 or targetId == 15402 then
 		return true
 	end
-
+	
 	local player = Player(cid)
-	player:addSkillTries(SKILL_FISHING, 1)
-	if math.random(1, 100) <= math.min(math.max(10 + (player:getEffectiveSkillLevel(SKILL_FISHING) - 10) * 0.597, 10), 50) then
-		if useWorms and not player:removeItem("worm", 1) then
-			return true
-		end
-
-		if targetId == 15401 then
-			local targetItem = Item(itemEx.uid)
-			targetItem:transform(targetId + 1)
-			targetItem:decay()
-
-			if math.random(1, 100) >= 97 then
-				player:addItem(15405, 1)
+	if player:getItemById("worm", true) then	
+		player:addSkillTries(SKILL_FISHING, 1)
+		if math.random(1, 100) <= math.min(math.max(10 + (player:getEffectiveSkillLevel(SKILL_FISHING) - 10) * 0.597, 10), 50) then
+			if useWorms and not player:removeItem("worm", 1) then
 				return true
 			end
-		elseif targetId == 7236 then
-			local targetItem = Item(itemEx.uid)
-			targetItem:transform(targetId + 1)
-			targetItem:decay()
 
-			local rareChance = math.random(1, 100)
-			if rareChance == 1 then
-				player:addItem(7158, 1)
-				return true
-			elseif rareChance <= 4 then
-				player:addItem(2669, 1)
-				return true
-			elseif rareChance <= 10 then
-				player:addItem(7159, 1)
-				return true
+			if targetId == 15401 then
+				local targetItem = Item(itemEx.uid)
+				targetItem:transform(targetId + 1)
+				targetItem:decay()
+
+				if math.random(1, 100) >= 97 then
+					player:addItem(15405, 1)
+					return true
+				end
+			elseif targetId == 7236 then
+				local targetItem = Item(itemEx.uid)
+				targetItem:transform(targetId + 1)
+				targetItem:decay()
+
+				local rareChance = math.random(1, 100)
+				if rareChance == 1 then
+					player:addItem(7158, 1)
+					return true
+				elseif rareChance <= 4 then
+					player:addItem(2669, 1)
+					return true
+				elseif rareChance <= 10 then
+					player:addItem(7159, 1)
+					return true
+				end
 			end
+			player:addItem("fish", 1)
 		end
-		player:addItem("fish", 1)
+		return true
 	end
 	return true
 end
